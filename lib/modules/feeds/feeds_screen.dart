@@ -37,22 +37,26 @@ class FeedsScreen extends StatelessWidget {
                         ),
                   ),
                 ]),
-                cubit!.isLoadingPosts
-                    ? CircularProgressIndicator()
-                    : ListView.separated(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => buldPost(
-                          context,
-                          cubit!,
-                          cubit!.feedPosts![index],
-                          cubit!.postsID[index],
-                          index,
-                        ),
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 7),
-                        itemCount: cubit!.postLikes.length,
-                      )
+
+
+                ConditionalBuilder(
+                    condition: cubit!.isLoadingPosts && cubit!.allpostsLoaded==true&&cubit!.allLikspostsLoaded==true,
+                    builder:(context) =>  Center(child: CircularProgressIndicator()) ,
+                    fallback: (context) =>ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => buldPost(
+                        context,
+                        cubit!,
+                        cubit!.feedPosts![index],
+                        cubit!.postsID[index],
+                        index,
+                      ),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 7),
+                      itemCount: cubit!.postLikes.length,
+                    ) ,
+                )
               ],
             ),
           ),

@@ -288,6 +288,9 @@ class SocialCubit extends Cubit<SocialState> {
   List<String> postsID = [];
   List<int> postLikes = [];
   bool isLoadingPosts = true;
+  bool allpostsLoaded=false;
+  bool allLikspostsLoaded=false;
+
   void getFeedPosts() {
     emit(GetPostDataLoading());
     isLoadingPosts = true;
@@ -297,22 +300,17 @@ class SocialCubit extends Cubit<SocialState> {
         // isLoadingPosts = true;
         element.reference.collection('Likes').get().then((value) {
           postLikes.add(value.docs.length);
+
         }).catchError((error) {
           print(error.toString());
           showToast(msg: error.toString(), state: toastState.error );
         });
         Post postModel = Post.fromJson(element.data());
-        if (feedPosts == null) {
-          postsID = [element.id];
-          feedPosts = [postModel];
-        } else {
-          postsID.add(element.id);
-          feedPosts!.add(postModel);
-        }
+        postsID.add(element.id);
+        feedPosts!.add(postModel);
       });
-    }).then((value) {
-      isLoadingPosts = false;
-      emit(GetPostDataSuccess());
+      allpostsLoaded=true;
+
     }).catchError((error) {
       print(error.toString());
       showToast(msg: error.toString(), state: toastState.error );
@@ -345,13 +343,12 @@ class SocialCubit extends Cubit<SocialState> {
     FirebaseFirestore.instance.collection('users').get().then((value) {
       emit(SuccessALlUsersData());
       value.docs.forEach((element) {
-
-
         if (element.data()['uid'] != userCreation!.uid)
           usersForChat.add(UserCreation.fromJson(element.data()));
       });
     }).catchError((e) {
-      emit(FailALlUsersData(e));
+      // print('here is erorr');
+      emit(FailALlUsersData(e.toString()));
     });
   }
 

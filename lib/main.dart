@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialapp/modules/loginModel/cupitLogin/loginCubit.dart';
 
 import 'package:socialapp/shared/components/ThemeFile.dart';
+import 'package:socialapp/shared/components/components.dart';
 import 'package:socialapp/shared/sharedpref/sharedPreferance.dart';
 import 'package:socialapp/shared/var.dart';
 import 'package:socialapp/social_cubit/social_cubit.dart';
@@ -21,14 +22,13 @@ void main() async {
   messagingToken =await FirebaseMessaging.instance.getToken();
 
   FirebaseMessaging.onMessage.listen((event) {
+    showToast(msg: 'here notification', state: toastState.warning);
     print('here notification');
     print(event.data.toString());
 
   });
 
   FirebaseMessaging.onBackgroundMessage( _firebaseMessagingBackgroundHandler,);
-
-  print( '    the token is   ${messagingToken} ');
   Bloc.observer = MyBlocObserver();
   await CashHelper.init();
   Widget page;
