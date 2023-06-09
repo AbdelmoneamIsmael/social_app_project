@@ -26,18 +26,18 @@ class SocialCubit extends Cubit<SocialState> {
   UserCreation? userCreation;
   getUserInformation() {
     emit(GetUserDataLoading());
-    print('here');
+
     String UID = CashHelper.getData(key: 'uID');
-    print(UID);
+
 
     FirebaseFirestore.instance.collection('users').doc(UID).get().then((value) {
-      print('here');
-      print(value.data());
+
+
       userCreation = UserCreation.fromJson(value.data()!);
-      print(userCreation!.email);
+
       emit(GetUserDataSuccess());
     }).catchError((error) {
-      print(error.toString());
+      showToast(msg: error.toString(), state: toastState.error );
       emit(GetUserDataFail(error.toString()));
     });
   }
@@ -76,7 +76,7 @@ class SocialCubit extends Cubit<SocialState> {
       profileImage = File(pickedFile.path);
       emit(PickImageSuccess());
     } else {
-      print('no Image selected');
+      showToast(msg: 'no Image selected', state: toastState.warning );
       emit(PickImageFailed());
     }
   }
@@ -92,7 +92,6 @@ class SocialCubit extends Cubit<SocialState> {
       value.ref.getDownloadURL().then((value) {
         emit(UploadImageSuccess());
         newProfileLink = value.toString();
-        print(newProfileLink);
       }).catchError((error) {});
     }).catchError((error) {
       emit(UploadImageFailed());
@@ -124,7 +123,7 @@ class SocialCubit extends Cubit<SocialState> {
       newCoverImage = File(pickedFile.path);
       emit(PickImageSuccess());
     } else {
-      print('no Image selected');
+      showToast(msg: 'no Image selected', state: toastState.warning );
       emit(PickImageFailed());
     }
   }
@@ -138,7 +137,6 @@ class SocialCubit extends Cubit<SocialState> {
   ) {
     if (profileImage != null) {
       if (newCoverImage != null) {
-        print('update both');
         update(
           address: address,
           email: email,
@@ -151,7 +149,6 @@ class SocialCubit extends Cubit<SocialState> {
         newCoverImage = null;
         profileImage = null;
       } else {
-        print('udating Pimage');
         print(newProfileLink);
         update(
           address: address,
@@ -164,7 +161,6 @@ class SocialCubit extends Cubit<SocialState> {
         profileImage = null;
       }
     } else if (newCoverImage != null) {
-      print('udating Cimage');
       print(newCoverLink);
       update(
         address: address,
@@ -230,7 +226,6 @@ class SocialCubit extends Cubit<SocialState> {
     final pickedFile =
         await postImagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      print(postImage.toString());
       emit(PickImageSuccess());
       return postImage = File(pickedFile.path);
 
@@ -302,10 +297,9 @@ class SocialCubit extends Cubit<SocialState> {
         // isLoadingPosts = true;
         element.reference.collection('Likes').get().then((value) {
           postLikes.add(value.docs.length);
-          print(postLikes);
         }).catchError((error) {
           print(error.toString());
-          print('erorrrrrrrrrrr');
+          showToast(msg: error.toString(), state: toastState.error );
         });
         Post postModel = Post.fromJson(element.data());
         if (feedPosts == null) {
@@ -321,6 +315,7 @@ class SocialCubit extends Cubit<SocialState> {
       emit(GetPostDataSuccess());
     }).catchError((error) {
       print(error.toString());
+      showToast(msg: error.toString(), state: toastState.error );
       emit(GetPostDataFail(error.toString()));
     });
   }
@@ -337,6 +332,7 @@ class SocialCubit extends Cubit<SocialState> {
       emit(SuccessPostLikes());
     }).catchError((error) {
       print(error.toString());
+      showToast(msg: error.toString(), state: toastState.error );
       emit(ErrorPostLikes(error));
     });
   }
@@ -349,7 +345,7 @@ class SocialCubit extends Cubit<SocialState> {
     FirebaseFirestore.instance.collection('users').get().then((value) {
       emit(SuccessALlUsersData());
       value.docs.forEach((element) {
-        print("hey");
+
 
         if (element.data()['uid'] != userCreation!.uid)
           usersForChat.add(UserCreation.fromJson(element.data()));
@@ -427,7 +423,7 @@ class SocialCubit extends Cubit<SocialState> {
       messageImage = File(pickedFile.path);
       emit(PickImageSuccess());
     } else {
-      print('no Image selected');
+      showToast(msg: 'no Image selected', state: toastState.success );
       emit(PickImageFailed());
     }
   }
@@ -443,11 +439,10 @@ class SocialCubit extends Cubit<SocialState> {
       value.ref.getDownloadURL().then((value) {
         emit(UploadImageSuccess());
         newMessageImageLink = value.toString();
-        print(newMessageImageLink);
       }).catchError((error) {});
     }).catchError((error) {
       emit(UploadImageFailed());
     });
   }
-  /////////////////////hi abdelmoneam hey ////////
+
 }
