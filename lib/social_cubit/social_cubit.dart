@@ -196,8 +196,7 @@ class SocialCubit extends Cubit<SocialState> {
     String? profileLink,
     String? coverLink,
   }) {
-    print(profileLink);
-    print(coverLink);
+
     UserCreation user = UserCreation(
       bio: bio!,
       name: name!,
@@ -234,10 +233,10 @@ class SocialCubit extends Cubit<SocialState> {
       print(postImage.toString());
       emit(PickImageSuccess());
       return postImage = File(pickedFile.path);
-      print(postImage.toString());
-      emit(PickImageSuccess());
+
+
     } else {
-      print('no Image selected');
+
       emit(PickImageFailed());
     }
   }
@@ -253,7 +252,7 @@ class SocialCubit extends Cubit<SocialState> {
       value.ref.getDownloadURL().then((value) {
         emit(SuccessUploadPostImage());
         newPostImageLink = value.toString();
-        print(newPostImageLink);
+
       }).catchError((error) {
         emit(FailUploadPostImage());
       });
@@ -267,7 +266,6 @@ class SocialCubit extends Cubit<SocialState> {
     required String? uid,
     required String? postImage,
     required String? dateTime,
-    // required String? postID,
     required String? text,
     required String? profileImage,
   }) {
@@ -451,4 +449,5 @@ class SocialCubit extends Cubit<SocialState> {
       emit(UploadImageFailed());
     });
   }
+  /////////////////////hi abdelmoneam hey ////////
 }
